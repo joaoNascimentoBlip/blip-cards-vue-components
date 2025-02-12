@@ -311,6 +311,7 @@
             :on-location-error="selected"
             :disable-link="disableLink"
             :readonly="readonly"
+            :translations="translations"
           />
         </div>
       </div>
