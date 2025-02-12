@@ -174,6 +174,9 @@
         <button class="button" @click="sendReplyButton">
           ENVIAR Reply Button
         </button>
+        <button class="button" @click="sendReplyDeletedMessage">
+          ENVIAR Reply Message Deleted
+        </button>
         <button class="button" @click="sendReplyMessage">
           ENVIAR Reply Message
         </button>
@@ -1116,6 +1119,26 @@ export default {
             footer: {
               text: 'rodapé de testes'
             }
+          }
+        }
+      })
+      this.send()
+    },
+    sendReplyDeletedMessage: function() {
+      this.json = JSON.stringify({
+        id: 'b1c3398f-ef63-426d-98b8-37ca84478f8f',
+        to: 'to@msging.net',
+        from: 'from@msging.net',
+        type: 'application/vnd.lime.reply+json',
+        content: {
+          replied: {
+            type: 'text/plain',
+            value: 'replied text'
+          },
+          inReplyTo: {
+            id: 'b1c3398f-ef63-426d-98b8-37ca84478f8f',
+            type: 'application/vnd.lime.deleted-content+json',
+            value: { }
           }
         }
       })
