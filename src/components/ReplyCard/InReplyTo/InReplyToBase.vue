@@ -1,14 +1,22 @@
 <template>
   <div 
-    class="in-reply-to-message-container" 
-    :class="{ 'in-reply-to-message-container-margin': !isReplyingOnInput, 'cursor-pointer': !!this.document }"
+    :class="{ 'in-reply-to-message-container-margin': !isReplyingOnInput, 'cursor-pointer': !!this.document,
+              'in-reply-to-message-deleted-container': isDeletedContentReply, 'in-reply-to-message-container': !isDeletedContentReply
+     }"
     @click="goToMessageReplyed"
   >
     <template>
-      <span class="in-reply-to-message-bar" :class="{ 'own-message': isOwnMessage }"></span>   
+      <span class="in-reply-to-message-bar" :class="{ 'own-message': isOwnMessage }"></span>
+      <in-reply-to-deleted-content
+        :in-reply-to="inReplyTo"
+        v-if="isDeletedContentReply"
+        :replying-to-text="replyingToText"
+        :deleted-content-text = "translations.messageDeleted"
+      />
+
       <in-reply-to-text
         :in-reply-to="inReplyTo"
-        v-if="isTextPlain"
+        v-else-if="isTextPlain"
         :replying-to-text="replyingToText"
       />
 
@@ -144,6 +152,9 @@ export default {
     isTextPlain() {
       return this.inReplyTo.type === 'text/plain'
     },
+    isDeletedContentReply() {
+      return this.inReplyTo.type === 'application/vnd.lime.deleted-content+json'
+    },
     isSelectType() {
       return this.inReplyTo.type === 'application/vnd.lime.select+json'
     },
@@ -226,6 +237,12 @@ export default {
     height: 2.5rem;
   }
 } 
+
+.in-reply-to-message-deleted-container {
+  border-radius: 13px 13px 13px 2px;
+  border: 1px solid #a7a3a3 !important;
+  background-color: $color-surface-3 !important;
+}
 
 .container-reply-item {
   max-height: 110px;
