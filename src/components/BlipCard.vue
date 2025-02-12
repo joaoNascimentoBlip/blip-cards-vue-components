@@ -561,6 +561,7 @@
           :reply-text="translations.replyText"
           :is-external-message="externalMessage"
           :external-message-text="translations.externalMessageText"
+          :deleted-content-text = "translations.messageDeleted"
           :reply-callback="replyCallback"
         />
 
