@@ -171,6 +171,8 @@
         <button class="button" @click="sendMenuListMultiSection">
           ENVIAR Menu List Multi Section
         </button>
+        <h1>Reply Examples:</h1>
+
         <button class="button" @click="sendReplyButton">
           ENVIAR Reply Button
         </button>
