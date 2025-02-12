@@ -58,6 +58,31 @@
           :translations="translations"
         />
 
+        <deleted-content
+          v-else-if="document.type === 'application/vnd.lime.deleted-content+json'"
+          class="blip-card"
+          :status="status"
+          :length="length"
+          :position="position"
+          :document="editableDocument.content"
+          :member-info="memberInfo"
+          :full-document="editableDocument"
+          :date="date"
+          :on-save="saveCard"
+          :editable="editable"
+          :on-deleted="deleteCard"
+          :on-metadata-edit="isMetadataReady"
+          :deletable="deletable"
+          :editing="isCardEditing"
+          :on-cancel="cancel"
+          :disable-link="disableLink"
+          :is-external-message="externalMessage"
+          :external-message-text="translations.externalMessageText"
+          :deleted-content-text = "translations.messageDeleted"
+          :reply-callback="replyCallback"
+          :translations="translations"
+        />
+
         <media-link
           v-else-if="document.type === 'application/vnd.lime.media-link+json'"
           class="blip-card"
@@ -91,7 +116,6 @@
           :translations="translations"
           :transcription="transcription"
           :reply-callback="replyCallback"
-          :on-image-selected="onImageSelected"
         />
 
         <document-select
@@ -240,7 +264,10 @@
         <location
           class="blip-card"
           v-else-if="document.type === 'application/vnd.lime.location+json'"
-          :translations="translations"
+          :failed-to-send-msg="translations.failedToSend"
+          :latitude-msg="translations.latitude"
+          :longitude-msg="translations.longitude"
+          :text-msg="translations.text"
           :status="status"
           :position="position"
           :document="editableDocument.content"
@@ -254,6 +281,8 @@
           :editing="isCardEditing"
           :on-cancel="cancel"
           :is-external-message="externalMessage"
+          :external-message-text="translations.externalMessageText"
+          :translations="translations"
           :reply-callback="replyCallback"
         />
 
@@ -404,7 +433,6 @@
           :length="length"
           :position="position"
           :document="editableDocument.content"
-          :full-document="editableDocument"
           :member-info="memberInfo"
           :date="date"
         />
@@ -503,7 +531,7 @@
         />
 
         <reply-card
-          v-else-if="document.type === MessageTypesConstants.REPLY_MESSAGE"
+          v-else-if="document.type === 'application/vnd.lime.reply+json'"
           class="blip-card"
           :failed-to-send-msg="translations.failedToSend"
           :updatedPhotoMargin="updatedPhotoMargin"
@@ -534,7 +562,6 @@
           :is-external-message="externalMessage"
           :external-message-text="translations.externalMessageText"
           :reply-callback="replyCallback"
-          :scroll-to-message-by-id="scrollToMessageById"
         />
 
         <reaction-card
@@ -764,12 +791,6 @@ export default {
     },
     replyCallback: {
       type: Function
-    },
-    scrollToMessageById: {
-      type: Function
-    },
-    onImageSelected: {
-      type: Function
     }
   },
   data() {
@@ -845,7 +866,7 @@ export default {
       return bubbleHeight - photoHeight
     },
     resolveUnsupportedRepliedType() {
-      if (this.document.type === MessageTypesConstants.REPLY_MESSAGE) {
+      if (this.document.type === 'application/vnd.lime.reply+json') {
         const { replied } = this.document.content
         let isSupportedRepliedType = supportedRepliedTypes.includes(
           replied.type
